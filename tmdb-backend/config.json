@@ -1,0 +1,65 @@
+{
+    "Query1": [
+    {
+        "$match": {
+            "details.genres": {
+                "$elemMatch": {
+                    "name": "Adventure"
+                }
+            }
+        }
+    }, {
+        "$project": {
+            "_id": 0,
+            "genre": "Adventure",
+            "income": {
+                "$arrayElemAt": [
+                    "$details.revenue", 0
+                ]
+            },
+            "vote_average": {
+                "$arrayElemAt": [
+                    "$details.vote_average", 0
+                ]
+            },
+            "overview": {
+                "$arrayElemAt": [
+                    "$details.overview", 0
+                ]
+            }
+        }
+    }, {
+        "$bucket": {
+            "groupBy": "$income",
+            "boundaries": [
+                0, 50000000, 60000000, 700000000, 800000000
+            ],
+            "default": "Uncategorized",
+            "output": {
+                "count": {
+                    "$sum": 1
+                },
+                "avg_rating": {
+                    "$avg": "$vote_average"
+                },
+                "avg_revenue": {
+                    "$avg": "$income"
+                }
+            }
+        }
+    }
+],
+    "Query2": [
+        {
+            "$match": {
+                "field1": "value2"
+            }
+        },
+        {
+            "$group": {
+                "_id": "$field2",
+                "total": {"$sum": "$field3"}
+            }
+        }
+    ]
+}
