@@ -61,5 +61,46 @@
                 "total": {"$sum": "$field3"}
             }
         }
-    ]
+    ],
+    "Query5": [
+  {
+    "$match": {
+      "revenue": {
+        "$exists": true
+      },
+      "genres": {
+        "$size": 1
+      }
+    }
+  },
+  {
+    "$project": {
+      "revenue": 1,
+      "genres": {
+        "$arrayElemAt": ["$genres.name", 0]
+      },
+      "vote_average": 1
+    }
+  },
+  {
+    "$group": {
+      "_id": "$genres",
+      "average_revenue": {
+        "$avg": "$revenue"
+      },
+      "average_rating": {
+        "$avg": "$vote_average"
+      }
+    }
+  },
+  {
+    "$sort": {
+      "average_revenue": -1
+    }
+  },
+  {
+    "$limit":
+      10
+  }
+]
 }
