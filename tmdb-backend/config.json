@@ -1,5 +1,5 @@
 {
-    "Query1": [
+    "Query0": [
     {
         "$match": {
             "details.genres": {
@@ -49,20 +49,172 @@
         }
     }
 ],
-    "Query2": [
-        {
-            "$match": {
-                "field1": "value2"
-            }
-        },
-        {
-            "$group": {
-                "_id": "$field2",
-                "total": {"$sum": "$field3"}
+    "Query1": [
+  {
+    "$project": {
+      "credits": 1,
+      "revenue": 1,
+      "budget": 1,
+      "vote_average": 1,
+      "popularity":1
+    }
+  },
+  {
+    "$unwind": "$credits"
+  },
+  {
+    "$match": {
+      "credits.cast": {
+        "$exists": true,
+        "$ne": []
+      },
+ 			"popularity": { "$gt": 0 },
+      "revenue": { "$gt": 1000000 },
+      "budget": { "$gt": 1000000 },
+      "vote_average": {"$gt": 0}
+    }
+  },
+  {
+    "$project": {
+      "actors": {
+        "$slice": ["$credits.cast.name", 3]
+      },
+      "revenue": 1,
+      "budget": 1,
+      "vote_average": 1,
+      "popularity": 1
+    }
+  },
+  {
+    "$unwind": "$actors"
+  },
+  {
+    "$group": {
+      "_id": "$actors",
+      "totalRevenue": {
+        "$sum": "$revenue"
+      },
+      "totalBudget": {
+        "$sum": "$budget"
+      },
+      "average_rating": {
+        "$avg": "$vote_average"
+      },
+      "avg_popularity": {
+        "$avg": "$popularity"
+      }
+    }
+  },
+  {
+    "$project": {
+      "actorRating": {
+        "$add": [
+          "$average_rating", { "$max": [1, "$average_rating"] },
+          "$avg_popularity", { "$max": [1, "$avg_popularity"] }
+        ]
+      },
+      "successRating": {
+        "$divide": ["$totalRevenue", "$totalBudget"]
+      }
+    }
+  }, { "$limit": 25 }
+
+]
+,
+  "Query2": [
+  { "$unwind": "$credits" },
+  { "$unwind": "$credits.cast" },
+  { "$unwind": { "path": "$credits.crew", "preserveNullAndEmptyArrays": true } },
+
+  {
+    "$match": {
+      "credits.crew.job": "Director"
+    }
+  },
+
+
+  {
+    "$match": {
+      "$expr": { "$ne": ["$credits.cast.name", "$credits.crew.name"] }
+    }
+  },
+
+  {
+    "$group": {
+      "_id": { "cast": "$credits.cast.name", "crew": "$credits.crew.name" },
+      "movies": { "$push": "$title" },
+      "revenue": { "$avg": "$revenue" },
+      "count": { "$sum": 1 }
+    }
+  },
+
+  { "$sort": { "count": -1 } },
+
+  { "$limit": 15 },
+  {
+    "$project": {
+      "_id": 0,
+      "cast": "$_id.cast",
+      "crew": "$_id.crew",
+      "count": 1,
+      "avg_revenue": "$revenue",
+      "collaborated_in": "$movies"
+    }
+  }
+],
+
+  "Query3": [
+    {
+        "$addFields": {
+            "decade": {
+                "$subtract": [
+                    {
+                        "$year": "$release_date"
+                    }, {
+                        "$mod": [
+                            {
+                                "$year": "$release_date"
+                            }, 10
+                        ]
+                    }
+                ]
             }
         }
-    ],
-    "Query5": [
+    }, {
+        "$unwind": "$genres"
+    }, {
+        "$group": {
+            "_id": {
+                "decade": "$decade",
+                "genre": "$genres.name"
+            },
+            "genrePopularity": {
+                "$avg": "$popularity"
+            }
+        }
+    }, {
+        "$group": {
+            "_id": "$_id.decade",
+            "topGenres": {
+                "$push": {
+                    "genre": "$_id.genre",
+                    "popularity": "$genrePopularity"
+                }
+            }
+        }
+    }, {
+        "$project": {
+            "_id": 0,
+            "decade": "$_id",
+            "topGenres": {
+                "$slice": [
+                    "$topGenres", 3
+                ]
+            }
+        }
+    }
+],
+    "Query4": [
   {
     "$match": {
       "revenue": {

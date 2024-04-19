@@ -18,12 +18,12 @@ def start():
 def get_data(path):
     result = db.custom_query(f'Query{path}')
     if result:
-        if path == '5':
+        if path == '4':
             result_list = [['Genre', 'Avg Rating', 'Avg Revenue']]
             for item in result:
                 result_list.append([item['_id'], item['average_rating'], item['average_revenue']])
             return jsonify({'result': result_list})
-        return
+        return jsonify({'result': result})
     else:
         return jsonify({'error': 'No matching data found.'}), 404
 

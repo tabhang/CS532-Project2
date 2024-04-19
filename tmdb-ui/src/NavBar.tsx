@@ -27,9 +27,9 @@ const NavBar: React.FC<NavBarProps> = ({ onTabChange }) => {
             <div className={`tab ${activeTab === 4 ? 'active' : ''}`} onClick={() => handleTabClick(4)}>
                 Query 4
             </div>
-            <div className={`tab ${activeTab === 5 ? 'active' : ''}`} onClick={() => handleTabClick(5)}>
-                Query 5
-            </div>
+            {/*<div className={`tab ${activeTab === 5 ? 'active' : ''}`} onClick={() => handleTabClick(5)}>*/}
+            {/*    Query 5*/}
+            {/*</div>*/}
         </div>
     );
 };
