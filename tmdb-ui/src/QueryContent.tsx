@@ -94,7 +94,7 @@ const QueryContent: React.FC<QueryContentProps> = ({ query }) => {
                     setChartOptions(options);
 
                 }
-                if (query == '2'){
+                if (query == '1'){
                     const formattedData = ['From', 'To', 'Count','Revenue'];
                     const dataListFormatted = list.map((item: { cast: any; crew: any; count: any; avg_revenue: any }) => [item.cast, item.crew, item.count, item.avg_revenue]);
                     const newdata = [formattedData , ...dataListFormatted]
@@ -123,7 +123,7 @@ const QueryContent: React.FC<QueryContentProps> = ({ query }) => {
                     setChartOptions(options);
                 }
 
-                if(query == '1'){
+                if(query == '2'){
                     const header= ['ActorName','actorRating', 'successRating']
                     const dataListFormatted = list.map((item: { _id: any; actorRating: any; successRating: any }) => [item._id,item.actorRating, item.successRating,]);
 

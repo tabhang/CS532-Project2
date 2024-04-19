@@ -1,6 +1,6 @@
 {
-  "1": "Generate actor ratings in relation to movie popularity, revenue, budget, and user votes,\naiming to uncover trends that show the connection between actor performance and\nvarious aspects of a film's success",
-  "2": "Identify pairs of cast or crew members who have worked together\nmost frequently, considering diverse production companies.",
+  "2": "Generate actor ratings in relation to movie popularity, revenue, budget, and user votes,\naiming to uncover trends that show the connection between actor performance and\nvarious aspects of a film's success",
+  "1": "Identify pairs of cast or crew members who have worked together\nmost frequently, considering diverse production companies.",
   "3": "Identify the most dominant genres in each decade based on the number of movies\nand analyze the evolution of genre popularity",
   "4": "Focus on a specific genre, explore the revenue distribution across movies within that\ngenre, and correlate it with user ratings"
 
